@@ -80,7 +80,7 @@ void loop()
     Serial.println();
     Serial.println("disconnecting.");
     client.stop();
-    delay(7000);
+    delay(60000);
     Serial.println("Trying to connect again...");
     if (client.connect(server,80)) {
       Serial.println("connected");
