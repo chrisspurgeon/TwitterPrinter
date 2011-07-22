@@ -80,12 +80,28 @@ void loop()
     Serial.println();
     Serial.println("disconnecting.");
     client.stop();
+    delay(7000);
+    Serial.println("Trying to connect again...");
+    if (client.connect(server,80)) {
+      Serial.println("connected");
+      // Make a HTTP request:
+      //    client.println("GET /search?q=arduino HTTP/1.0");
+      client.println("GET /robots.txt HTTP/1.0");
+      client.println();
+    } 
+    else {
+      // kf you didn't get a connection to the server:
+      Serial.println("connection failed");
+    }
 
     // do nothing forevermore:
-    for(;;)
-      ;
+    //   for(;;)
+    //     ;
+
   }
 }
+
+
 
 
 
