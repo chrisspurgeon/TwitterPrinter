@@ -33,6 +33,8 @@ Client client;
 void setup() {
   // start the serial library:
   Serial.begin(9600);
+  
+  Serial.println("Attempting to get an IP address...");
   // start the Ethernet connection:
   if (Ethernet.begin(mac) == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");

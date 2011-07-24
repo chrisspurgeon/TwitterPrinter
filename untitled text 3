@@ -1,0 +1,49 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:google="http://base.google.com/ns/1.0" xml:lang="en-US" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/" xmlns="http://www.w3.org/2005/Atom" xmlns:twitter="http://api.twitter.com/" xmlns:georss="http://www.georss.org/georss">
+<id>tag:search.twitter.com,2005:search/@chrisspurgeon
+</id>
+<link type="text/html" href="http://search.twitter.com/search?q=%40chrisspurgeon" rel="alternate"/>
+<link type="application/atom+xml" href="http://search.twitter.com/search.atom?q=%40chrisspurgeon" rel="self"/>
+<title>@chrisspurgeon - Twitter Search
+</title>
+<link type="application/opensearchdescription+xml" href="http://search.twitter.com/opensearch.xml" rel="search"/>
+<link type="application/atom+xml" href="http://search.twitter.com/search.atom?since_id=94270398341976064&amp;q=%40chrisspurgeon" rel="refresh"/>
+<updated>2011-07-22T04:59:49Z
+</updated>
+<openSearch:itemsPerPage>1
+</openSearch:itemsPerPage>
+<link type="application/atom+xml" href="http://search.twitter.com/search.atom?page=2&amp;max_id=94270398341976064&amp;q=%40chrisspurgeon&amp;rpp=1" rel="next"/>
+<entry>
+<id>tag:search.twitter.com,2005:94270398341976064
+</id>
+<published>2011-07-22T04:59:49Z
+</published>
+<link type="text/html" href="http://twitter.com/chrisspurgeon/statuses/94270398341976064" rel="alternate"/>
+<title>@chrisspurgeon This is a multi-word test from Arduino. Please ignore. These aren't the droids you're looking for.
+</title>
+<content type="html">&lt;em&gt;@chrisspurgeon&lt;/em&gt; This is a multi-word test from Arduino. Please ignore. These aren't the droids you're looking for.
+</content>
+<updated>2011-07-22T04:59:49Z
+</updated>
+<link type="image/png" href="http://a2.twimg.com/profile_images/115260752/wage_FB_normal.jpg" rel="image"/>
+<twitter:geo>
+<georss:point>34.159605 -118.370247
+</georss:point>
+</twitter:geo>
+<twitter:metadata>
+<twitter:result_type>recent
+</twitter:result_type>
+</twitter:metadata>
+<twitter:source>&lt;a href="http://twitterrific.com" rel="nofollow"&gt;Twitterrific for Mac&lt;/a&gt;
+</twitter:source>
+<twitter:lang>en
+</twitter:lang>
+<author>
+<name>chrisspurgeon (Chris Spurgeon)
+</name>
+<uri>http://twitter.com/chrisspurgeon
+</uri>
+</author>
+</entry>
+</feed>
