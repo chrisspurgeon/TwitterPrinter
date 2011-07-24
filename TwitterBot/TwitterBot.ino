@@ -12,7 +12,7 @@ byte mac[] = {
 //IPAddress server(216,119,67,135); // www.spurgeonworld.com
 
 
-
+int checkDelay = 10000;
 
 
 SoftwareSerial Thermal(2, 3); //Soft RX from printer on D2, soft TX out to printer on D3
@@ -77,21 +77,21 @@ void setup() {
   }
   Serial.println();
   delay(1000);
-  Serial.println("connecting...");
+/*  Serial.println("connecting...");
 
   // if you get a connection, report back via serial:
   if (client.connect("www.spurgeonworld.com",80)) {
     Serial.println("connected");
     // Make a HTTP request:
-//    client.println("GET /search.atom?rpp=1&q=%40chrisspurgeon&since_id= HTTP/1.0");
-        client.println("GET / HTTP/1.0");
+    //    client.println("GET /search.atom?rpp=1&q=%40chrisspurgeon&since_id= HTTP/1.0");
+    client.println("GET / HTTP/1.0");
     client.println();
   } 
   else {
     // kf you didn't get a connection to the server:
     Serial.println("connection failed");
   }
-
+*/
 }
 
 void loop()
@@ -110,13 +110,13 @@ void loop()
     Serial.println("disconnecting.");
     client.stop();
     client.flush();
-    delay(60000);
+    delay(checkDelay);
     Serial.println("Trying to connect again...");
     if (client.connect("www.spurgeonworld.com",80)) {
       Serial.println("connected");
       // Make a HTTP request:
       //    client.println("GET /search?q=arduino HTTP/1.0");
-      client.println("GET /robots.txt HTTP/1.0");
+      client.println("GET / HTTP/1.0");
       client.println();
     } 
     else {
@@ -130,6 +130,7 @@ void loop()
 
   }
 }
+
 
 
 
