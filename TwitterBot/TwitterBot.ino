@@ -70,28 +70,35 @@ void setup() {
   }
   // print your local IP address:
   Serial.print("My IP address: ");
+  Thermal.print("My IP address is: ");
   for (byte thisByte = 0; thisByte < 4; thisByte++) {
     // print the value of each byte of the IP address:
     Serial.print(Ethernet.localIP()[thisByte], DEC);
     Serial.print("."); 
+    Thermal.print(Ethernet.localIP()[thisByte], DEC);
+    Thermal.print("."); 
   }
   Serial.println();
-  delay(1000);
-/*  Serial.println("connecting...");
-
-  // if you get a connection, report back via serial:
-  if (client.connect("www.spurgeonworld.com",80)) {
-    Serial.println("connected");
-    // Make a HTTP request:
-    //    client.println("GET /search.atom?rpp=1&q=%40chrisspurgeon&since_id= HTTP/1.0");
-    client.println("GET / HTTP/1.0");
-    client.println();
-  } 
-  else {
-    // kf you didn't get a connection to the server:
-    Serial.println("connection failed");
+  for (int i = 0; i < 3; i++) {
+//    Thermal.println();
+    Thermal.write(10);
   }
-*/
+  delay(1000);
+  /*  Serial.println("connecting...");
+   
+   // if you get a connection, report back via serial:
+   if (client.connect("www.spurgeonworld.com",80)) {
+   Serial.println("connected");
+   // Make a HTTP request:
+   //    client.println("GET /search.atom?rpp=1&q=%40chrisspurgeon&since_id= HTTP/1.0");
+   client.println("GET / HTTP/1.0");
+   client.println();
+   } 
+   else {
+   // kf you didn't get a connection to the server:
+   Serial.println("connection failed");
+   }
+   */
 }
 
 void loop()
@@ -116,7 +123,11 @@ void loop()
       Serial.println("connected");
       // Make a HTTP request:
       //    client.println("GET /search?q=arduino HTTP/1.0");
-      client.println("GET / HTTP/1.0");
+
+      char buf[50];
+      unsigned long cachebuster = random(1,100000);
+      sprintf(buf, "GET /?cachebuster=%lu HTTP/1.0", cachebuster);
+      client.println(buf);
       client.println();
     } 
     else {
@@ -130,6 +141,7 @@ void loop()
 
   }
 }
+
 
 
 
