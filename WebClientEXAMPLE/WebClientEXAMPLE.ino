@@ -15,15 +15,10 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
-// Enter a MAC address and IP address for your controller below.
-// The IP address will be dependent on your local network:
+// Enter a MAC address for your controller below.
+// Newer Ethernet shields have a MAC address printed on a sticker on the shield
 byte mac[] = {  0x90, 0xA2, 0xDA, 0x00, 0x3A, 0x17 };
-byte ip[] = { 192,168,1,120 };
-// byte server[] = { 173,194,33,104 }; // Google
-byte server[] = { 74,125,224,82 }; // Google
-
-// 74.125.224.82
-
+IPAddress server(74,125,224,145); // Google
 
 // Initialize the Ethernet client library
 // with the IP address and port of the server 
@@ -31,19 +26,23 @@ byte server[] = { 74,125,224,82 }; // Google
 Client client;
 
 void setup() {
-  // start the Ethernet connection:
-  Ethernet.begin(mac, ip);
   // start the serial library:
   Serial.begin(9600);
+  // start the Ethernet connection:
+  if (Ethernet.begin(mac) == 0) {
+    Serial.println("Failed to configure Ethernet using DHCP");
+    // no point in carrying on, so do nothing forevermore:
+    for(;;)
+      ;
+  }
   // give the Ethernet shield a second to initialize:
   delay(1000);
   Serial.println("connecting...");
 
   // if you get a connection, report back via serial:
-  if (client.connect()) {
+  if (client.connect(server, 80)) {
     Serial.println("connected");
     // Make a HTTP request:
-//    client.println("GET /search?q=arduino HTTP/1.0");
     client.println("GET /robots.txt HTTP/1.0");
     client.println();
   } 

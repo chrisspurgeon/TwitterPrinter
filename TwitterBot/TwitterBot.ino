@@ -5,15 +5,13 @@
 
 // Enter a MAC address for your controller below.
 // Newer Ethernet shields have a MAC address printed on a sticker on the shield
-byte mac[] = {  
+byte mac[] = {   
   0x90, 0xA2, 0xDA, 0x00, 0x3A, 0x17 };
-//IPAddress server(199,59,148,201); // search.twitter.com
-//IPAddress server(174,120,152,186); // whatsmyuseragent.com
-//IPAddress server(216,119,67,135); // www.spurgeonworld.com
-
 
 int checkDelay = 10000;
-
+String twitterSearch = "%40chrisspurgeon";
+String numberOfTweets = "1";
+String twitterID = "0";
 
 SoftwareSerial Thermal(2, 3); //Soft RX from printer on D2, soft TX out to printer on D3
 
@@ -80,67 +78,45 @@ void setup() {
   }
   Serial.println();
   for (int i = 0; i < 3; i++) {
-//    Thermal.println();
+    //    Thermal.println();
     Thermal.write(10);
   }
-  delay(1000);
-  /*  Serial.println("connecting...");
-   
-   // if you get a connection, report back via serial:
-   if (client.connect("www.spurgeonworld.com",80)) {
-   Serial.println("connected");
-   // Make a HTTP request:
-   //    client.println("GET /search.atom?rpp=1&q=%40chrisspurgeon&since_id= HTTP/1.0");
-   client.println("GET / HTTP/1.0");
-   client.println();
-   } 
-   else {
-   // kf you didn't get a connection to the server:
-   Serial.println("connection failed");
-   }
-   */
+  delay(5000);
 }
 
-void loop()
-{
+void loop() {
   // if there are incoming bytes available 
   // from the server, read them and print them:
   if (client.available()) {
     char c = client.read();
     Serial.print(c);
-    // Thermal.print(c);
+    Thermal.print(c);
   }
 
   // if the server's disconnected, stop the client:
   if (!client.connected()) {
+    Thermal.println();
     Serial.println();
     Serial.println("disconnecting.");
     client.stop();
     client.flush();
     delay(checkDelay);
     Serial.println("Trying to connect again...");
-    if (client.connect("www.spurgeonworld.com",80)) {
+    if (client.connect("216.119.67.135",80)) {
       Serial.println("connected");
-      // Make a HTTP request:
-      //    client.println("GET /search?q=arduino HTTP/1.0");
-
-      char buf[50];
-      unsigned long cachebuster = random(1,100000);
-      sprintf(buf, "GET /?cachebuster=%lu HTTP/1.0", cachebuster);
-      client.println(buf);
+      client.println("GET /twitterfeed/tweets.php?rpp=" + numberOfTweets + "&q=" + twitterSearch + "&since_id=" + twitterID + " HTTP/1.0");
+      // Attempting to hit this URL...
+      // http://216.119.67.135/twitterfeed/tweets.php?rpp=1&q=%40chrisspurgeon&since_id=0
       client.println();
     } 
     else {
       // kf you didn't get a connection to the server:
       Serial.println("connection failed");
     }
-
-    // do nothing forevermore:
-    //   for(;;)
-    //     ;
-
   }
 }
+
+
 
 
 
