@@ -51,10 +51,11 @@ void setup() {
   Serial.println("connecting...");
 
   // if you get a connection, report back via serial:
-  if (client.connect(server, 80)) {
+  if (client.connect("www.spurgeonworld.com", 80)) {
     Serial.println("connected");
     // Make a HTTP request:
-    client.println("GET /robots.txt HTTP/1.0");
+//    client.println("GET /robots.txt HTTP/1.0");
+    client.println("GET /twitterfeed/tweets.php?rpp=4&q=%40chrisspurgeon&since_id=95164107203952640 HTTP/1.0");
     client.println();
   } 
   else {
