@@ -37,7 +37,12 @@ char printBreakTime = 15; //Not sure what the defaut is. Testing shows the max h
 Client client;
 
 void setup() {
-  Serial.begin(38400); //Use hardware serial for debugging
+
+  pinMode(4, OUTPUT);  // block the SD card pin by setting it high.
+  digitalWrite(4, HIGH);
+
+
+  Serial.begin(9600); //Use hardware serial for debugging
   Thermal.begin(19200); //Setup soft serial for ThermalPrinter control
 
   printOnBlack = FALSE;
@@ -85,6 +90,8 @@ void setup() {
 }
 
 void loop() {
+  digitalWrite(4, HIGH);
+  
   // if there are incoming bytes available 
   // from the server, read them and print them:
   if (client.available()) {
@@ -98,8 +105,8 @@ void loop() {
     Thermal.println();
     Serial.println();
     Serial.println("disconnecting.");
-    client.stop();
     client.flush();
+    client.stop();
     delay(checkDelay);
     Serial.println("Trying to connect again...");
     if (client.connect("216.119.67.135",80)) {
