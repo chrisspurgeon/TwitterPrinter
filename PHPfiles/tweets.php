@@ -15,7 +15,7 @@ fclose($fh);
 
 
 // Uncomment for debugging...
-// echo '<pre>' . $page . '</pre>';
+echo '<pre>' . $page . '</pre>';
 
 $dom = domxml_open_mem($page);
 
@@ -51,7 +51,11 @@ if (count($entries) > 0) {
 	$messageDate = $dateChildren[0]->get_content();
 	$authorChildNodes = $authorChildren[0]->child_nodes();
 	
-	$messageAuthor = $authorChildNodes[0]->get_content();
+	if (count($authorChildNodes) > 0) {
+		$messageAuthor = $authorChildNodes[0]->get_content();
+	} else {
+		$messageAuthor = "UNKNOWN AUTHOR";
+	}
 	$messageID = $IDChildren[0]->get_content();
 	$messageIDParts = explode(':',$messageID);
 	$messageID = $messageIDParts[2];
