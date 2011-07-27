@@ -1,3 +1,5 @@
+#include <TextFinder.h>
+
 /*
   Web client
  
@@ -14,6 +16,11 @@
 
 #include <SPI.h>
 #include <Ethernet.h>
+
+
+
+char tweet[140];
+String tweetcopy;
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -32,6 +39,7 @@ byte subnet[] = {
 // with the IP address and port of the server 
 // that you want to connect to (port 80 is default for HTTP):
 Client client(server, 80);
+TextFinder  finder(client); 
 
 void setup() {
   // start the Ethernet connection:
@@ -47,8 +55,13 @@ void loop()
   // if there are incoming bytes available 
   // from the server, read them and print them:
   if (client.available()) {
-    char c = client.read();
-    Serial.print(c);
+    int stringLength = finder.getString("|","|",tweet,140);
+    Serial.print("I got here! The length is ");
+    Serial.println(stringLength);
+    Serial.print(tweet);
+    Serial.println();
+    //    char c = client.read();
+    //    Serial.print(c);
   }
 
   // if the server's disconnected, stop the client:
@@ -63,8 +76,7 @@ void loop()
     Serial.println("Let's connect.");
     if (client.connect()) {
       Serial.println("Connection established.");
-//      client.println("GET /twitterfeed/tweets.php?rpp=4&q=%40chrisspurgeon&since_id=95164107203952640 HTTP/1.0");
-      client.println("GET /robots.txt HTTP/1.0");
+      client.println("GET /twitterfeed/tweets.php?rpp=4&q=%40chrisspurgeon&since_id=95164107203952640 HTTP/1.0");
       client.println();
     } 
     else {
@@ -72,6 +84,8 @@ void loop()
     }
   }
 }
+
+
 
 
 
