@@ -57,18 +57,20 @@ void loop()
     Serial.println("disconnecting.");
     client.flush();
     client.stop();
-    
-    
+
+
     delay(10000);
     Serial.println("Let's connect.");
     if (client.connect()) {
       Serial.println("Connection established.");
-    client.println("GET /twitterfeed/tweets.php?rpp=4&q=%40chrisspurgeon&since_id=95164107203952640 HTTP/1.0");
-    client.println();
-    } else {
+      client.println("GET /twitterfeed/tweets.php?rpp=4&q=%40chrisspurgeon&since_id=95164107203952640 HTTP/1.0");
+      client.println();
+    } 
+    else {
       Serial.println("Connection failed.");
     }
   }
 }
+
 
 
