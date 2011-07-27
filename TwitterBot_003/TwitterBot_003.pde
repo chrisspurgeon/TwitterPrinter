@@ -17,9 +17,16 @@
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
-byte mac[] = {  0x90, 0xA2, 0xDA, 0x00, 0x3A, 0x17 };
-byte ip[] = { 192,168,1,125 };
-byte server[] = { 216,119,67,135 }; // Google
+byte mac[] = {  
+  0x90, 0xA2, 0xDA, 0x00, 0x3A, 0x17 };
+byte ip[] = { 
+  192,168,1,125 };
+byte server[] = { 
+  216,119,67,135 }; // spurgeonworld
+byte gateway[] = { 
+  192,168,1,1};	
+byte subnet[] = { 
+  255, 255, 255, 0 };
 
 // Initialize the Ethernet client library
 // with the IP address and port of the server 
@@ -33,19 +40,6 @@ void setup() {
   Serial.begin(9600);
   // give the Ethernet shield a second to initialize:
   delay(5000);
-  Serial.println("connecting...");
-
-  // if you get a connection, report back via serial:
-  if (client.connect()) {
-    Serial.println("connected");
-    // Make a HTTP request:
-    client.println("GET /robots.txt HTTP/1.0");
-    client.println();
-  } 
-  else {
-    // kf you didn't get a connection to the server:
-    Serial.println("connection failed");
-  }
 }
 
 void loop()
@@ -63,10 +57,18 @@ void loop()
     Serial.println("disconnecting.");
     client.flush();
     client.stop();
-
-    // do nothing forevermore:
-    for(;;)
-      ;
+    
+    
+    delay(10000);
+    Serial.println("Let's connect.");
+    if (client.connect()) {
+      Serial.println("Connection established.");
+    client.println("GET /twitterfeed/tweets.php?rpp=4&q=%40chrisspurgeon&since_id=95164107203952640 HTTP/1.0");
+    client.println();
+    } else {
+      Serial.println("Connection failed.");
+    }
   }
 }
+
 
