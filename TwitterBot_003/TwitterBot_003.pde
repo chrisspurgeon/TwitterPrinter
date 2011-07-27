@@ -1,5 +1,3 @@
-#include <TextFinder.h>
-
 /*
   Web client
  
@@ -16,14 +14,6 @@
 
 #include <SPI.h>
 #include <Ethernet.h>
-
-
-
-char tweet[140];
-String lastID = 0;
-String author;
-String tweetcopy;
-String timestamp;
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -42,7 +32,6 @@ byte subnet[] = {
 // with the IP address and port of the server 
 // that you want to connect to (port 80 is default for HTTP):
 Client client(server, 80);
-TextFinder  finder(client); 
 
 void setup() {
   // start the Ethernet connection:
@@ -57,40 +46,9 @@ void loop()
 {
   // if there are incoming bytes available 
   // from the server, read them and print them:
-  int loopcounter = 0;
   if (client.available()) {
-    Serial.print("Loopcounter is ");
-    Serial.println(loopcounter);
-    int stringLength = finder.getString("|","|",tweet,140);
-    lastID = tweet;
-    stringLength = finder.getString("|","|",tweet,140);
-    author = tweet;
-    stringLength = finder.getString("|","|",tweet,140);
-    tweetcopy = tweet;
-    stringLength = finder.getString("|","|",tweet,140);
-    timestamp = tweet;
-    Serial.print("I got here! The length is ");
-    Serial.println(stringLength);
-    Serial.print(tweet);
-    Serial.println();
-    /*    switch(loopcounter) {
-     case 0:
-     lastID = tweet;
-     break;
-     case 1:
-     author = tweet;
-     break;
-     case 2:
-     tweetcopy = tweet;
-     break;
-     case 3:
-     timestamp = tweet;
-     break;
-     }
-     loopcounter++;
-     */
-    //    char c = client.read();
-    //    Serial.print(c);
+    char c = client.read();
+    Serial.print(c);
   }
 
   // if the server's disconnected, stop the client:
@@ -99,11 +57,6 @@ void loop()
     Serial.println("disconnecting.");
     client.flush();
     client.stop();
-    Serial.println("\n\n\nAfter the loops, here's what I got:");
-    Serial.println("lastID is " + lastID);
-    Serial.println("author is " + author);
-    Serial.println("tweetcopy is " + tweetcopy);
-    Serial.println("timestamp is " + timestamp);
 
 
     delay(10000);
@@ -118,11 +71,6 @@ void loop()
     }
   }
 }
-
-
-
-
-
 
 
 
