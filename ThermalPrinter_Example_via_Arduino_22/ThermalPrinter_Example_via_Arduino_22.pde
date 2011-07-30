@@ -67,7 +67,7 @@ char printBreakTime = 15; //Not sure what the defaut is. Testing shows the max h
 void setup() {
   pinMode(ledPin, OUTPUT);
 
-  Serial.begin(38400); //Use hardware serial for debugging
+  Serial.begin(9600); //Use hardware serial for debugging
   Thermal.begin(19200); //Setup soft serial for ThermalPrinter control
 
   printOnBlack = FALSE;
@@ -88,6 +88,9 @@ void setup() {
 
   Serial.println();
   Serial.println("Parameters set");
+  Thermal.println();
+  Thermal.println("Parameters set");
+  Thermal.println();
 }
 
 void loop() {

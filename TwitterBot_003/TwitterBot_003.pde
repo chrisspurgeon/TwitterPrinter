@@ -1,4 +1,7 @@
+#include <NewSoftSerial.h>
 #include <TextFinder.h>
+#include <SPI.h>
+#include <Ethernet.h>
 
 /*
   Web client
@@ -13,9 +16,6 @@
  
  */
 
-#include <SPI.h>
-#include <Ethernet.h>
-
 
 
 char tweet[150];
@@ -26,6 +26,21 @@ String tweetSender;
 String tweetDate;
 int segmentCounter = 0;
 boolean printFlag = false;
+
+
+NewSoftSerial Thermal(2, 3); //Soft RX from printer on D2, soft TX out to printer on D3
+
+#define FALSE  0
+#define TRUE  1
+int printOnBlack = FALSE;
+int printUpSideDown = FALSE;
+
+int ledPin = 13;
+int heatTime = 255; //80 is default from page 23 of datasheet. Controls speed of printing and darkness
+int heatInterval = 255; //2 is default from page 23 of datasheet. Controls speed of printing and darkness
+char printDensity = 15; //Not sure what the defaut is. Testing shows the max helps darken text. From page 23.
+char printBreakTime = 15; //Not sure what the defaut is. Testing shows the max helps darken text. From page 23.
+
 
 
 
@@ -50,6 +65,32 @@ TextFinder  finder(client);
 
 void setup() {
 
+  Thermal.begin(19200); //Setup soft serial for ThermalPrinter control
+
+  printOnBlack = FALSE;
+  printUpSideDown = FALSE;
+
+  //Modify the print speed and heat
+  Thermal.print(27, BYTE);
+  Thermal.print(55, BYTE);
+  Thermal.print(7, BYTE); //Default 64 dots = 8*('7'+1)
+  Thermal.print(heatTime, BYTE); //Default 80 or 800us
+  Thermal.print(heatInterval, BYTE); //Default 2 or 20us
+
+  //Modify the print density and timeout
+  Thermal.print(18, BYTE);
+  Thermal.print(35, BYTE);
+  int printSetting = (printDensity<<4) | printBreakTime;
+  Thermal.print(printSetting, BYTE); //Combination of printDensity and printBreakTime
+
+
+
+  Thermal.println(10, BYTE);
+  Thermal.println("Parameters set!");
+  Thermal.println(10, BYTE);
+  Thermal.println(10, BYTE);
+  Thermal.println(10, BYTE);
+
   lastID = "0";
 
 
@@ -57,7 +98,7 @@ void setup() {
   Ethernet.begin(mac, ip);
   // start the serial library:
   Serial.begin(9600);
-  // give the Ethernet shield a second to initialize:
+  // give the Ethernet shield time to initialize:
   delay(5000);
 }
 
@@ -95,15 +136,15 @@ void loop()
 
   // if the server's disconnected, stop the client:
   if (!client.connected()) {
+    if (printFlag == true) {
+      firePrinter();
+      printFlag = false;
+    }
     Serial.println();
     Serial.println("disconnecting.");
     client.flush();
     client.stop();
     segmentCounter = 0;
-    if (printFlag == true) {
-      firePrinter();
-      printFlag = false;
-    }
 
 
     delay(10000);
@@ -126,7 +167,20 @@ void loop()
 
 void firePrinter() {
   Serial.println("I've triggered firePrinter!");
+  Thermal.println(10, BYTE);
+  Thermal.print("FROM: ");
+  Thermal.println(tweetSender);
+  Thermal.println(10, BYTE);
+  Thermal.println(tweetMessage);
+  Thermal.println(10, BYTE);
+  Thermal.print("SENT: ");
+  Thermal.println(tweetDate);
+  Thermal.println(10, BYTE);
+  Thermal.println(10, BYTE);
+
 }
+
+
 
 
 
