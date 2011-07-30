@@ -19,8 +19,10 @@
 
 
 
-char tweet[140];
+char tweet[150];
 String tweetcopy;
+String lastID;
+
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -42,6 +44,10 @@ Client client(server, 80);
 TextFinder  finder(client); 
 
 void setup() {
+  
+  lastID = "95494805454471168";
+  
+  
   // start the Ethernet connection:
   Ethernet.begin(mac, ip);
   // start the serial library:
@@ -55,7 +61,7 @@ void loop()
   // if there are incoming bytes available 
   // from the server, read them and print them:
   if (client.available()) {
-    int stringLength = finder.getString("|","|",tweet,140);
+    int stringLength = finder.getString("|","|",tweet,150);
     Serial.print("I got here! The length is ");
     Serial.println(stringLength);
     Serial.print(tweet);
@@ -76,7 +82,10 @@ void loop()
     Serial.println("Let's connect.");
     if (client.connect()) {
       Serial.println("Connection established.");
-      client.println("GET /twitterfeed/tweets.php?rpp=4&q=%40chrisspurgeon&since_id=95164107203952640 HTTP/1.0");
+      client.print("GET /twitterfeed/tweets.php?rpp=4&q=%40chrisspurgeon&since_id=");
+//      client.print("95493525780709376");
+      client.print(lastID);
+      client.println(" HTTP/1.0");
       client.println();
     } 
     else {
@@ -84,6 +93,7 @@ void loop()
     }
   }
 }
+
 
 
 
