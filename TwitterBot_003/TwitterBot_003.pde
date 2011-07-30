@@ -3,8 +3,7 @@
 /*
   Web client
  
- This sketch connects to a website (http://www.google.com)
- using an Arduino Wiznet Ethernet shield. 
+ This sketch connects to a website using an Arduino Wiznet Ethernet shield. 
  
  Circuit:
  * Ethernet shield attached to pins 10, 11, 12, 13
@@ -22,6 +21,12 @@
 char tweet[150];
 String tweetcopy;
 String lastID;
+String tweetMessage;
+String tweetSender;
+String tweetDate;
+int segmentCounter = 0;
+boolean printFlag = false;
+
 
 
 // Enter a MAC address and IP address for your controller below.
@@ -44,10 +49,10 @@ Client client(server, 80);
 TextFinder  finder(client); 
 
 void setup() {
-  
-  lastID = "95494805454471168";
-  
-  
+
+  lastID = "0";
+
+
   // start the Ethernet connection:
   Ethernet.begin(mac, ip);
   // start the serial library:
@@ -64,10 +69,28 @@ void loop()
     int stringLength = finder.getString("|","|",tweet,150);
     Serial.print("I got here! The length is ");
     Serial.println(stringLength);
+    if (stringLength > 0) {
+      switch (segmentCounter) {
+      case 0:
+        printFlag = true;
+        lastID = tweet;
+        break;
+      case 1:
+        tweetSender = tweet;
+        break;
+      case 2:
+        tweetMessage = tweet;
+        break;
+      case 3:
+        tweetDate = tweet;
+        break;
+      }
+    }
     Serial.print(tweet);
     Serial.println();
     //    char c = client.read();
     //    Serial.print(c);
+    segmentCounter++;
   }
 
   // if the server's disconnected, stop the client:
@@ -76,14 +99,20 @@ void loop()
     Serial.println("disconnecting.");
     client.flush();
     client.stop();
+    segmentCounter = 0;
+    if (printFlag == true) {
+      firePrinter();
+      printFlag = false;
+    }
 
 
     delay(10000);
     Serial.println("Let's connect.");
     if (client.connect()) {
       Serial.println("Connection established.");
-      client.print("GET /twitterfeed/tweets.php?rpp=4&q=%40chrisspurgeon&since_id=");
-//      client.print("95493525780709376");
+      Serial.println("Hitting the server with a last ID of " + lastID);
+      client.print("GET /twitterfeed/tweets.php?rpp=6&q=%40chrisspurgeon&since_id=");
+      //      client.print("95493525780709376");
       client.print(lastID);
       client.println(" HTTP/1.0");
       client.println();
@@ -93,6 +122,14 @@ void loop()
     }
   }
 }
+
+
+void firePrinter() {
+  Serial.println("I've triggered firePrinter!");
+}
+
+
+
 
 
 
