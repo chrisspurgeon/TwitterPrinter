@@ -152,8 +152,7 @@ void loop()
     if (client.connect()) {
       Serial.println("Connection established.");
       Serial.println("Hitting the server with a last ID of " + lastID);
-      client.print("GET /twitterfeed/tweets.php?rpp=6&q=%40chrisspurgeon&since_id=");
-      //      client.print("95493525780709376");
+      client.print("GET /twitterfeed/tweets.php?rpp=6&q=thehousebot&since_id=");
       client.print(lastID);
       client.println(" HTTP/1.0");
       client.println();
@@ -175,6 +174,7 @@ void firePrinter() {
   Thermal.println(10, BYTE);
   Thermal.print("SENT: ");
   Thermal.println(tweetDate);
+  Thermal.println(10, BYTE);
   Thermal.println(10, BYTE);
   Thermal.println(10, BYTE);
 
