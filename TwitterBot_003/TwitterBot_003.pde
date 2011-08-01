@@ -17,7 +17,7 @@
  */
 
 
-
+boolean DEBUG = false;
 char tweet[150];
 String tweetcopy;
 String lastID;
@@ -64,7 +64,7 @@ Client client(server, 80);
 TextFinder  finder(client); 
 
 void setup() {
-
+  delay(2000);
   Thermal.begin(19200); //Setup soft serial for ThermalPrinter control
 
   printOnBlack = FALSE;
@@ -93,11 +93,13 @@ void setup() {
 
   lastID = "0";
 
-
+  delay(2000);
   // start the Ethernet connection:
   Ethernet.begin(mac, ip);
-  // start the serial library:
-  Serial.begin(9600);
+  if (DEBUG) {
+    // start the serial library:
+    Serial.begin(9600);
+  }
   // give the Ethernet shield time to initialize:
   delay(5000);
 }
@@ -108,8 +110,10 @@ void loop()
   // from the server, read them and print them:
   if (client.available()) {
     int stringLength = finder.getString("|","|",tweet,150);
-    Serial.print("I got here! The length is ");
-    Serial.println(stringLength);
+    if (DEBUG) {
+      Serial.print("I got here! The length is ");
+      Serial.println(stringLength);
+    }
     if (stringLength > 0) {
       switch (segmentCounter) {
       case 0:
@@ -127,10 +131,10 @@ void loop()
         break;
       }
     }
-    Serial.print(tweet);
-    Serial.println();
-    //    char c = client.read();
-    //    Serial.print(c);
+    if (DEBUG) {
+      Serial.print(tweet);
+      Serial.println();
+    }
     segmentCounter++;
   }
 
@@ -140,32 +144,42 @@ void loop()
       firePrinter();
       printFlag = false;
     }
-    Serial.println();
-    Serial.println("disconnecting.");
+    if (DEBUG) {
+      Serial.println();
+      Serial.println("disconnecting.");
+    }
     client.flush();
     client.stop();
     segmentCounter = 0;
 
 
     delay(10000);
-    Serial.println("Let's connect.");
+    if (DEBUG) {
+      Serial.println("Let's connect.");
+    }
     if (client.connect()) {
-      Serial.println("Connection established.");
-      Serial.println("Hitting the server with a last ID of " + lastID);
+      if (DEBUG) {
+        Serial.println("Connection established.");
+        Serial.println("Hitting the server with a last ID of " + lastID);
+      }
       client.print("GET /twitterfeed/tweets.php?rpp=6&q=thehousebot&since_id=");
       client.print(lastID);
       client.println(" HTTP/1.0");
       client.println();
     } 
     else {
-      Serial.println("Connection failed.");
+      if (DEBUG) {
+        Serial.println("Connection failed.");
+      }
     }
   }
 }
 
 
 void firePrinter() {
-  Serial.println("I've triggered firePrinter!");
+  if (DEBUG) {
+    Serial.println("I've triggered firePrinter!");
+  }
   Thermal.println(10, BYTE);
   Thermal.print("FROM: ");
   Thermal.println(tweetSender);
@@ -179,6 +193,13 @@ void firePrinter() {
   Thermal.println(10, BYTE);
 
 }
+
+
+
+
+
+
+
 
 
 
