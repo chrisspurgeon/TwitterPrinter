@@ -29,6 +29,9 @@ int segmentCounter = 0;
 boolean printFlag = false;
 boolean lightFlag = true;
 int tweetCheckDelay = 30000;
+int buttonState = 0;
+long startOfDelay;
+
 
 NewSoftSerial Thermal(2, 3); //Soft RX from printer on D2, soft TX out to printer on D3
 
@@ -38,6 +41,8 @@ int printOnBlack = FALSE;
 int printUpSideDown = FALSE;
 
 const int ledPin = 9;
+const int buttonPin = 10;
+
 int heatTime = 255; //80 is default from page 23 of datasheet. Controls speed of printing and darkness
 int heatInterval = 255; //2 is default from page 23 of datasheet. Controls speed of printing and darkness
 char printDensity = 15; //Not sure what the defaut is. Testing shows the max helps darken text. From page 23.
@@ -76,6 +81,8 @@ TextFinder finder(client);
 
 void setup() {
   pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT);     
+
   lightFlag = false;
   Serial.begin(9600);
   delay(2000);
@@ -222,7 +229,11 @@ void loop()
     client.stop();
     segmentCounter = 0;
 
-    delay(tweetCheckDelay);
+    //    delay(tweetCheckDelay);
+    startOfDelay = millis();
+    while(millis() < (startOfDelay + tweetCheckDelay)) {
+      checkForButton(); 
+    }
 
     if (DEBUG) {
       Serial.println("Let's connect.");
@@ -270,7 +281,14 @@ void firePrinter() {
 
 }
 
-
+void checkForButton() {
+  buttonState = digitalRead(buttonPin);
+  if (buttonState == LOW) {
+    Serial.println("I think the button was pushed");
+    lightFlag = false;
+    digitalWrite(ledPin, LOW);
+  }
+}
 
 // Just a utility function to nicely format an IP address.
 const char* ip_to_str(const uint8_t* ipAddr)
@@ -279,6 +297,9 @@ const char* ip_to_str(const uint8_t* ipAddr)
   sprintf(buf, "%d.%d.%d.%d\0", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
   return buf;
 }
+
+
+
 
 
 
