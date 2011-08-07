@@ -110,6 +110,11 @@ void setup() {
 
     Serial.print("DNS IP address is ");
     Serial.println(ip_to_str(dnsAddr));
+
+    Serial.print("Checking for messages");
+    Serial.print("every ");
+    Serial.print(tweetCheckDelay);
+    Serial.println(" ms.");
   }
 
   Thermal.begin(19200); //Setup soft serial for ThermalPrinter control
@@ -138,16 +143,22 @@ void setup() {
   Thermal.println("A DHCP lease has been obtained.");
   Thermal.println(10, BYTE);
 
-  Thermal.print("My IP address is ");
+  Thermal.print("IP address is ");
   Thermal.println(ip_to_str(ipAddr));
   Thermal.println(10, BYTE);
 
-  Thermal.print("Gateway IP address is ");
+  Thermal.print("Gateway address is ");
   Thermal.println(ip_to_str(gatewayAddr));
   Thermal.println(10, BYTE);
 
   Thermal.print("DNS IP address is ");
   Thermal.println(ip_to_str(dnsAddr));
+  Thermal.println(10, BYTE);
+
+  Thermal.print("Checking for messages every");
+  Thermal.println(10, BYTE);
+  Thermal.print(tweetCheckDelay);
+  Thermal.println(" ms.");
   Thermal.println(10, BYTE);
   Thermal.println(10, BYTE);
   Thermal.println(10, BYTE);
@@ -268,6 +279,7 @@ const char* ip_to_str(const uint8_t* ipAddr)
   sprintf(buf, "%d.%d.%d.%d\0", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
   return buf;
 }
+
 
 
 
