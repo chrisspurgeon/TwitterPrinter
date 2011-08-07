@@ -27,7 +27,8 @@ String tweetSender;
 String tweetDate;
 int segmentCounter = 0;
 boolean printFlag = false;
-
+boolean lightFlag = true;
+int tweetCheckDelay = 30000;
 
 NewSoftSerial Thermal(2, 3); //Soft RX from printer on D2, soft TX out to printer on D3
 
@@ -36,12 +37,11 @@ NewSoftSerial Thermal(2, 3); //Soft RX from printer on D2, soft TX out to printe
 int printOnBlack = FALSE;
 int printUpSideDown = FALSE;
 
-int ledPin = 13;
+const int ledPin = 9;
 int heatTime = 255; //80 is default from page 23 of datasheet. Controls speed of printing and darkness
 int heatInterval = 255; //2 is default from page 23 of datasheet. Controls speed of printing and darkness
 char printDensity = 15; //Not sure what the defaut is. Testing shows the max helps darken text. From page 23.
 char printBreakTime = 15; //Not sure what the defaut is. Testing shows the max helps darken text. From page 23.
-
 
 
 
@@ -75,6 +75,9 @@ Client client(server, 80);
 TextFinder finder(client); 
 
 void setup() {
+  pinMode(ledPin, OUTPUT);
+  lightFlag = false;
+  Serial.begin(9600);
   delay(2000);
 
   if (DEBUG) {
@@ -154,16 +157,14 @@ void setup() {
   delay(2000);
   // start the Ethernet connection:
   //  Ethernet.begin(mac, ip);
-  if (DEBUG) {
-    // start the serial library:
-    Serial.begin(9600);
-  }
   // give the Ethernet shield time to initialize:
   delay(5000);
 }
 
 void loop()
 {
+
+
   // if there are incoming bytes available 
   // from the server, read them and print them:
   if (client.available()) {
@@ -210,8 +211,8 @@ void loop()
     client.stop();
     segmentCounter = 0;
 
+    delay(tweetCheckDelay);
 
-    delay(10000);
     if (DEBUG) {
       Serial.println("Let's connect.");
     }
@@ -236,9 +237,14 @@ void loop()
 
 
 void firePrinter() {
+  lightFlag = true;
   if (DEBUG) {
     Serial.println("I've triggered firePrinter!");
   }
+  if (lightFlag) {
+    digitalWrite(ledPin, HIGH);
+  }
+
   Thermal.println(10, BYTE);
   Thermal.print("FROM: ");
   Thermal.println(tweetSender);
@@ -262,6 +268,8 @@ const char* ip_to_str(const uint8_t* ipAddr)
   sprintf(buf, "%d.%d.%d.%d\0", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
   return buf;
 }
+
+
 
 
 
